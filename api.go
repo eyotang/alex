@@ -64,7 +64,7 @@ func TestParam(req *http.Request, r render.Render) {
 	var url = req.FormValue("url")
 	var header = req.FormValue("header")
 	var params = req.FormValue("param")
-	var data = req.FormValue("data")
+	var data = req.FormValue("body")
 	var method = req.FormValue("method")
 	var headerMap map[string]interface{}
 	var paramMap map[string]interface{}
@@ -79,6 +79,12 @@ func TestParam(req *http.Request, r render.Render) {
 	if host := req.Header.Get("Host"); host != "" {
 		rq.Host = host
 	}
+        if method == "POST" {
+            if contentType := rq.Header.Get("Content-Type"); contentType == "" {
+                contentType = "application/x-www-form-urlencoded"
+                rq.Header.Add("Content-Type", contentType)
+            }
+        }
 	client := &http.Client{}
 	var result = map[string]interface{}{}
 	resp, err := client.Do(rq)

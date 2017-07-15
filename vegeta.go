@@ -502,6 +502,12 @@ func NewRandomVegetaTargeter(job *VegetaJob) vegeta.Targeter {
 					header.Add(k, fmt.Sprintf("%v", v))
 				}
 			}
+                        if job.Method == "POST" {
+                            if contentType := header.Get("Content-Type"); contentType == "" {
+                                contentType = "application/x-www-form-urlencoded"
+                                header.Add("Content-Type", contentType)
+                            }
+                        }
 			var param = job.Seeds[i].Param
 			var data = job.Seeds[i].Data
 			var target = vegeta.Target{

@@ -2,6 +2,8 @@ Alex
 =================
 Alex is one benchmark web UI using golang based on vegeta library & boom. Vegeta provides stabilized qps benchmark library. Boom provided stabilized concurrency benchmark ability.
 
+Porting from: https://github.com/ireaderlab/alex.git
+
 [中文文档](README_zh.md)
 
 Alex Architecture
