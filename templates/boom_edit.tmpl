@@ -236,7 +236,11 @@ $(document).ready(function() {
         if(ok) {
             el.parent().removeClass("has-error")
         } else {
-            el.parent().addClass("has-error")
+            if(ok) {
+                el.parent().removeClass("has-error")
+            } else {
+                el.parent().addClass("has-error")
+            }
         }
         return ok;
     }

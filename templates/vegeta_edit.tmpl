@@ -236,7 +236,12 @@ $(document).ready(function() {
         if(ok) {
             el.parent().removeClass("has-error")
         } else {
-            el.parent().addClass("has-error")
+            ok = /^\w+(\.\w+){0,3}$/.test(params)
+            if(ok) {
+                el.parent().removeClass("has-error")
+            } else {
+                el.parent().addClass("has-error")
+            }
         }
         return ok;
     }
