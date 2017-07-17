@@ -79,12 +79,12 @@ func TestParam(req *http.Request, r render.Render) {
 	if host := req.Header.Get("Host"); host != "" {
 		rq.Host = host
 	}
-        if method == "POST" {
-            if contentType := rq.Header.Get("Content-Type"); contentType == "" {
-                contentType = "application/x-www-form-urlencoded"
-                rq.Header.Add("Content-Type", contentType)
-            }
-        }
+	if method == "POST" {
+		if contentType := rq.Header.Get("Content-Type"); contentType == "" {
+			contentType = "application/x-www-form-urlencoded"
+			rq.Header.Add("Content-Type", contentType)
+		}
+	}
 	client := &http.Client{}
 	var result = map[string]interface{}{}
 	resp, err := client.Do(rq)
@@ -93,7 +93,13 @@ func TestParam(req *http.Request, r render.Render) {
 		if err != nil {
 			result["err"] = err.Error()
 		} else {
-			result["result"] = string(body)
+			var bodyMap map[string]interface{}
+			err := json.Unmarshal(body, &bodyMap)
+			if err != nil {
+				result["err"] = err.Error()
+			} else {
+				result["result"] = bodyMap
+			}
 		}
 	} else {
 		result["err"] = err
