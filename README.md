@@ -43,7 +43,7 @@ go get gopkg.in/mgo.v2
 go get github.com/shirou/gopsutil
 # godep restore
 
-git clone https://github.com/shellquery/alex.git
+git clone https://github.com/eyotang/alex.git
 cd alex
 go build
 ./alex
