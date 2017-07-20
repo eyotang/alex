@@ -479,6 +479,9 @@ func LogAttackVegetaStart(job *VegetaJob, comment string) *AttackVegetaLog {
 
 func LogAttackVegetaEnd(lg *AttackVegetaLog, metricsList []*vegeta.Metrics) {
 	// record attack reports after job finished
+	for _, metrics := range metricsList {
+		metrics.Success = metrics.Success * 100
+	}
 	var op = bson.M{"$set": bson.M{"metricslist": metricsList, "state": "End", "endts": time.Now().Unix()}}
 	err := G_MongoDB.C("vegeta_logs").UpdateId(lg.Id, op)
 	if err != nil {

@@ -236,6 +236,7 @@ $(document).ready(function() {
         if(ok) {
             el.parent().removeClass("has-error")
         } else {
+            ok = /^\w+(\.\w+){0,3}$/.test(params)
             if(ok) {
                 el.parent().removeClass("has-error")
             } else {
