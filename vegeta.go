@@ -5,7 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/martini-contrib/render"
-	vegeta "github.com/tsenart/vegeta/lib"
+	vegeta "github.com/eyotang/vegeta/lib"
 	"gopkg.in/mgo.v2/bson"
 	"log"
 	"net/http"
@@ -161,6 +161,7 @@ func EditVegetaJob(req *http.Request, r render.Render) {
 	var headerSeeds = []map[string]interface{}{}
 	var paramSeeds = []map[string]interface{}{}
 	var dataSeeds = []map[string]interface{}{}
+	var expectationSeeds = []map[string]interface{}{}
 	for _, header := range req.Form["header"] {
 		var seed map[string]interface{}
 		json.Unmarshal([]byte(header), &seed)
@@ -176,9 +177,14 @@ func EditVegetaJob(req *http.Request, r render.Render) {
 		json.Unmarshal([]byte(data), &seed)
 		dataSeeds = append(dataSeeds, seed)
 	}
+	for _, expectation := range req.Form["expectation"] {
+		var seed map[string]interface{}
+		json.Unmarshal([]byte(expectation), &seed)
+		expectationSeeds = append(expectationSeeds, seed)
+	}
 	job.Seeds = make([]RequestSeed, len(headerSeeds))
 	for i := 0; i < len(headerSeeds); i++ {
-		job.Seeds[i] = RequestSeed{headerSeeds[i], paramSeeds[i], dataSeeds[i]}
+		job.Seeds[i] = RequestSeed{headerSeeds[i], paramSeeds[i], dataSeeds[i], expectationSeeds[i]}
 	}
 	var changed = bson.M{
 		"name":    job.Name,
@@ -505,19 +511,21 @@ func NewRandomVegetaTargeter(job *VegetaJob) vegeta.Targeter {
 					header.Add(k, fmt.Sprintf("%v", v))
 				}
 			}
-                        if job.Method == "POST" {
-                            if contentType := header.Get("Content-Type"); contentType == "" {
-                                contentType = "application/x-www-form-urlencoded"
-                                header.Add("Content-Type", contentType)
-                            }
-                        }
+			if job.Method == "POST" {
+				if contentType := header.Get("Content-Type"); contentType == "" {
+					contentType = "application/x-www-form-urlencoded"
+					header.Add("Content-Type", contentType)
+				}
+			}
 			var param = job.Seeds[i].Param
 			var data = job.Seeds[i].Data
+			var expectation = job.Seeds[i].Expectation
 			var target = vegeta.Target{
 				Method: job.Method,
 				URL:    Urlcat(host, job.Url, param),
 				Body:   BodyBytes(data),
 				Header: header,
+				Expectation: expectation,
 			}
 			targets = append(targets, target)
 		}

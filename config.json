@@ -1,6 +1,6 @@
 {
     "BindAddr": "0.0.0.0:8000",
-    "MongoUrl": "mongodb://localhost:27017/alex",
+    "MongoUrl": "mongodb://192.168.56.102:27017/alex",
     "Teams": [
         "live",
         "bplus",
