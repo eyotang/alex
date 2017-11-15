@@ -5,7 +5,7 @@ type RequestSeed struct {
 	Header map[string]interface{}
 	Param  map[string]interface{}
 	Data   map[string]interface{}
-	Assertion map[string]interface{}
+	Expectation map[string]interface{}
 }
 
 type MethodSelector struct {

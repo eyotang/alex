@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/martini-contrib/render"
+	vegeta "github.com/eyotang/vegeta/lib"
 	"github.com/shirou/gopsutil/load"
 	"github.com/shirou/gopsutil/mem"
 	"gopkg.in/mgo.v2/bson"
@@ -65,13 +66,16 @@ func TestParam(req *http.Request, r render.Render) {
 	var header = req.FormValue("header")
 	var params = req.FormValue("param")
 	var data = req.FormValue("body")
+	var expectation = req.FormValue("expectation")
 	var method = req.FormValue("method")
 	var headerMap map[string]interface{}
 	var paramMap map[string]interface{}
 	var dataMap map[string]interface{}
+	var expectationMap map[string]interface{}
 	json.Unmarshal([]byte(header), &headerMap)
 	json.Unmarshal([]byte(params), &paramMap)
 	json.Unmarshal([]byte(data), &dataMap)
+	json.Unmarshal([]byte(expectation), &expectationMap)
 	rq, _ := http.NewRequest(method, Urlcat(host, url, paramMap), bytes.NewReader(BodyBytes(dataMap)))
 	for k, vs := range headerMap {
 		rq.Header.Add(k, vs.(string))
@@ -99,6 +103,11 @@ func TestParam(req *http.Request, r render.Render) {
 				result["err"] = err.Error()
 			} else {
 				result["result"] = bodyMap
+				if vegeta.ExpectNear(expectationMap, bodyMap) {
+					result["expectation"] = "OK"
+				} else {
+					result["expectation"] = "NOK"
+				}
 			}
 		}
 	} else {

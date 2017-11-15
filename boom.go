@@ -160,7 +160,7 @@ func EditBoomJob(req *http.Request, r render.Render) {
 	var headerSeeds = []map[string]interface{}{}
 	var paramSeeds = []map[string]interface{}{}
 	var dataSeeds = []map[string]interface{}{}
-	var assertionSeeds = []map[string]interface{}{}
+	var expectationSeeds = []map[string]interface{}{}
 	for _, header := range req.Form["header"] {
 		var seed map[string]interface{}
 		json.Unmarshal([]byte(header), &seed)
@@ -176,14 +176,14 @@ func EditBoomJob(req *http.Request, r render.Render) {
 		json.Unmarshal([]byte(data), &seed)
 		dataSeeds = append(dataSeeds, seed)
 	}
-	for _, assertion := range req.Form["assertion"] {
+	for _, expectation := range req.Form["expectation"] {
 		var seed map[string]interface{}
-		json.Unmarshal([]byte(assertion), &seed)
-		assertionSeeds = append(assertionSeeds, seed)
+		json.Unmarshal([]byte(expectation), &seed)
+		expectationSeeds = append(expectationSeeds, seed)
 	}
 	job.Seeds = make([]RequestSeed, len(headerSeeds))
 	for i := 0; i < len(headerSeeds); i++ {
-		job.Seeds[i] = RequestSeed{headerSeeds[i], paramSeeds[i], dataSeeds[i], assertionSeeds[i]}
+		job.Seeds[i] = RequestSeed{headerSeeds[i], paramSeeds[i], dataSeeds[i], expectationSeeds[i]}
 	}
 	var changed = bson.M{
 		"name":    job.Name,

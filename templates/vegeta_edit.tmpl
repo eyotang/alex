@@ -73,7 +73,7 @@
                             <th>Header Params</th>
                             <th>Get Params</th>
                             <th>Post Params</th>
-                            <th>Response Assertion</th>
+                            <th>Response Expectation</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -90,7 +90,7 @@
                             <input type="text" name='data' value="{{ .Data|json }}" required title="Post Data Json" placeholder='Post Data Json' class="form-control"/>
                             </td>
                             <td>
-                            <input type="text" name='assertion' value="{{ .Assertion|json }}" required title="Response Assertion Json" placeholder='Response Assertion Json' class="form-control"/>
+                            <input type="text" name='expectation' value="{{ .Expectation|json }}" required title="Response Expectation Json" placeholder='Response Expectation Json' class="form-control"/>
                             </td>
                             <td class="text-center">
                                 <a data-op='add_row' class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></a>
@@ -185,7 +185,7 @@ $(document).ready(function() {
         var header = row.find("input[name=header]");
         var param = row.find("input[name=param]");
         var body = row.find("input[name=data]");
-        var assertion = row.find("input[name=assertion]");
+        var expectation = row.find("input[name=expectation]");
         var method = $("#job_form").find("select[name=method]").val();
         var host = $("#job_form").find("input[name=host]").val();
         var url = $("#job_form").find("input[name=url]").val();
@@ -199,6 +199,7 @@ $(document).ready(function() {
             {"header": header.val(),
              "param": param.val(),
              "body": body.val(),
+             "expectation": expectation.val(),
              "method": method,
              "url": url,
              "host": host},
@@ -276,6 +277,15 @@ $(document).ready(function() {
         });
         if(!result) {
             return false;    
+        }
+        var expectation_el = $('input[name=expectation]');
+        var result = true;
+        expectation_el.each(function (i, el) {
+            result = validateJson($(el));
+            return result;
+        });
+        if (!result) {
+            return false;
         }
         var host_el = $('input[name=host]');
         host_el.each(function (i, el) {
