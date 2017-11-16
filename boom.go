@@ -101,7 +101,7 @@ func CreateBoomJob(req *http.Request, r render.Render) {
 		Id:                 bson.NewObjectId(),
 		Name:               name,
 		Team:               team,
-		Hosts:              []string{"localhost:8000"},
+		Hosts:              []string{"www.example.com"},
 		Project:            project,
 		Seeds:              []RequestSeed{RequestSeed{}},
 		CreateTs:           time.Now().Unix(),

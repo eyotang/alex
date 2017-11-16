@@ -1,5 +1,5 @@
 <div class="panel panel-primary">
-    <div class="panel-heading">Vegeta性能测试计划 [稳定Qps]</div>
+    <div class="panel-heading">Vegeta 性能测试计划 [稳定QPS]</div>
     <div class="panel-body">
         <form class="form-inline" method="GET" id="search-form">
           <div class="form-group">
@@ -137,9 +137,9 @@
                 var jobId = $(el).data("id");
                 $.get("/api/vegeta/state?job_id=" + jobId, function(data) {
                     if(data.is_running) {
-                        $('#state-' + jobId).html('<span class="label label-success">Running</span>');
+                        $('#state-' + jobId).html('<span class="label label-success">正在执行</span>');
                     } else {
-                        $('#state-' + jobId).html('<span class="label label-default">Quiet</span>');
+                        $('#state-' + jobId).html('<span class="label label-default">静止</span>');
                         $('#job-' + jobId).removeAttr("data-running");
                     }
                     $('#rate-' + jobId).html('<span class="badge">'+ data.current_rate +'</span>');

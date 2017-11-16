@@ -1,5 +1,5 @@
 <div class="panel panel-primary">
-    <div class="panel-heading">Vegeta性能测试报告</div>
+    <div class="panel-heading">Vegeta 性能测试报告</div>
     <div class="panel-body">
         <form class="form-inline" method="GET" id="search-form">
           <div class="form-group">
@@ -30,9 +30,9 @@
                 <td>{{if .JobDetail}}{{ range .JobDetail.Hosts }}{{.}}<br/>{{end}}{{end}}</td>
                 <td>{{ .Comment }}</td>
                 {{ if .IsRunning }}
-                <td><span class="label label-success">Running</td>
+                <td><span class="label label-success">正在执行</td>
                 {{ else }}
-                <td><span class="label label-default">Finished</td>
+                <td><span class="label label-default">结束</td>
                 {{ end }}
                 <td>{{ .StartTs|strftime }}</td>
                 <td>{{ .EndTs|strftime}}</td>
