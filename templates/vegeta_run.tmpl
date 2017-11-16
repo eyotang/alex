@@ -1,13 +1,13 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Vegeta Run Configuration
+        Vegeta性能测试配置
     </div>
     <div class="panel-body">
         {{ with .form }}
         <form class="form-horizontal" id="run_form" method="POST" action="/vegeta/run">
           <input type="hidden" name="job_id" value="{{ .Job.Id.Hex }}"/>
           <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">Name</label>
+            <label for="name" class="col-sm-2 control-label">测试计划</label>
             <div class="col-sm-10">
                 <input type="text" readonly value="{{ .Job.Name }}" class="form-control">
             </div>
@@ -19,13 +19,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="workers" class="col-sm-2 control-label">Initial Concurrency</label>
+            <label for="workers" class="col-sm-2 control-label">初始并发数</label>
             <div class="col-sm-10">
                 <input type="number" min=1 name="workers" value="{{ .Job.Workers }}" required class="form-control">
             </div>
           </div>
           <div class="form-group">
-            <label for="redirects" class="col-sm-2 control-label">Max Redirects</label>
+            <label for="redirects" class="col-sm-2 control-label">最大重定向</label>
             <div class="col-sm-10">
                 <input type="number" min=-1 name="redirects" value="{{ .Job.Redirects }}" required class="form-control">
             </div>
@@ -39,13 +39,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="timeout" class="col-sm-2 control-label">Timeout(s)</label>
+            <label for="timeout" class="col-sm-2 control-label">超时(s)</label>
             <div class="col-sm-10">
                 <input type="number" min=1 name="timeout" value="{{ .Job.Timeout }}" required class="form-control">
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">QPS Settings</label>
+            <label class="col-sm-2 control-label">QPS配置</label>
             <div class="col-sm-10">
                 <table class="table table-bordered table-hover" id="rates_table">
                     <tbody>
@@ -55,7 +55,7 @@
                             <input type="number" min=1 name='rate' value="{{ .Rate }}" required title="QPS" placeholder='100' class="form-control"/>
                             </td>
                             <td>
-                            <input type="number" min=1 name='duration' value="{{ .Duration }}" required title="Time of Duration(s)" placeholder='60' class="form-control"/>
+                            <input type="number" min=1 name='duration' value="{{ .Duration }}" required title="持续时间(s)" placeholder='60' class="form-control"/>
                             </td>
                             <td class="text-center">
                                 <a data-op='add_row' class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></a>
@@ -68,15 +68,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="comment" class="col-sm-2 control-label">Comment</label>
+            <label for="comment" class="col-sm-2 control-label">描述</label>
             <div class="col-sm-10">
-                <input type="text" required name="comment" value="" class="form-control" placeholder="write something for backtracing">
+                <input type="text" required name="comment" value="" class="form-control" placeholder="简要描述该次测试，用于回溯。">
             </div>
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <a href="/vegeta/"class="btn btn-default">Cancel</a>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="/vegeta/"class="btn btn-default">取消</a>
+                <button type="submit" class="btn btn-primary">确定</button>
             </div>
           </div>
         </form>
