@@ -29,11 +29,11 @@
     <nav class="navbar navbar-inverse navbar-fixed-top">
         <div class="container-fluid">
             <div class="navbar-header">
-                <a class="navbar-brand" href="">Alex Benchmark</a>
+                <a class="navbar-brand" href="">性能测试Benchmark</a>
             </div>
             <div id="navbar" class="navbar-collapse collapse">
             <ul class="nav navbar-nav navbar-right">
-              <li><a href="javascript:void(0)" id="open_system_board">System</a></li>
+              <li><a href="javascript:void(0)" id="open_system_board">系统信息</a></li>
             </ul>
           </div>
         </div>
@@ -43,16 +43,16 @@
       <div class="row">
        <div class="col-sm-3 col-md-2 sidebar">
           <ul class="nav nav-sidebar">
-            <li><a href="/boom/">Boom Benchmark</a></li>
-            <li><a href="/boom/logs">Boom Logs</a></li>
-            <li><a href="/vegeta/">Vegeta Benchmark</a></li>
-            <li><a href="/vegeta/logs">Vegeta Logs</a></li>
+            <li><a href="/boom/">Boom性能测试计划</a></li>
+            <li><a href="/boom/logs">Boom性能测试报告</a></li>
+            <li><a href="/vegeta/">Vegeta性能测试计划</a></li>
+            <li><a href="/vegeta/logs">Vegeta性能测试报告</a></li>
           </ul>
         </div>
         <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
             <div class="panel panel-warning" id="system_board" style="display:none">
                 <div class="panel-heading">
-                Machine Status
+                服务器性能指标
                 </div>
                 <div class="panel-body" id="system_status">
                 </div>
@@ -64,7 +64,7 @@
     {{ else }}
             <div class="panel panel-warning" id="system_board" style="display:none">
                 <div class="panel-heading">
-                Machine Status
+                服务器性能指标
                 </div>
                 <div class="panel-body" id="system_status">
                 </div>
@@ -74,11 +74,11 @@
   </body>
 </html>
 <script type="text/html" id="system-tmpl">
-<span class="label label-primary">Cpu Load</span>
+<span class="label label-primary">CPU 负载</span>
 <span class="label label-success" data-content-text="load:1"></span>
 <span class="label label-success" data-content-text="load:5"></span>
 <span class="label label-success" data-content-text="load:15"></span><br/><br/>
-<span class="label label-primary">Memory</span>
+<span class="label label-primary">内存</span>
 <span class="label label-success" data-content-text="mem:total"></span>
 <span class="label label-success" data-content-text="mem:free"></span>
 <span class="label label-success" data-content-text="mem:buffers"></span>

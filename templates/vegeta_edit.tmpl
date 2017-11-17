@@ -1,19 +1,19 @@
 <div class="panel panel-primary">
     <div class="panel-heading">
-        Vegeta Job Edit
+        测试计划编辑
     </div>
     <div class="panel-body">
         {{ with .form }}
         <form class="form-horizontal" id="job_form" method="POST" action="/vegeta/edit">
           <input type="hidden" name="job_id" value="{{ .Job.Id.Hex }}"/>
           <div class="form-group">
-            <label for="name" class="col-sm-2 control-label">Name</label>
+            <label for="name" class="col-sm-2 control-label">测试计划</label>
             <div class="col-sm-10">
                 <input type="text" name="name" value="{{ .Job.Name }}" class="form-control" required placeholder="Job Name">
             </div>
           </div>
           <div class="form-group">
-            <label for="team" class="col-sm-2 control-label">Team</label>
+            <label for="team" class="col-sm-2 control-label">业务线</label>
             <div class="col-sm-10">
                 <select name="team" class="form-control">
                     {{ range .Teams }}
@@ -23,19 +23,19 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="project" class="col-sm-2 control-label">Project Name</label>
+            <label for="project" class="col-sm-2 control-label">项目名称</label>
             <div class="col-sm-10">
                 <input type="text" name="project" value="{{ .Job.Project }}" class="form-control" required placeholder="Project Name">
             </div>
           </div>
           <div class="form-group">
-            <label for="url" class="col-sm-2 control-label">Relative Url</label>
+            <label for="url" class="col-sm-2 control-label">相对URL</label>
             <div class="col-sm-10">
                 <input type="text" title="Url must start with /" name="url" value="{{ .Job.Url }}" class="form-control" required placeholder="/">
             </div>
           </div>
           <div class="form-group">
-            <label for="method" class="col-sm-2 control-label">Method</label>
+            <label for="method" class="col-sm-2 control-label">请求类型</label>
             <div class="col-sm-10">
                 <select name="method" class="form-control">
                     {{ range .Methods }}
@@ -45,14 +45,14 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Host:Port List</label>
+            <label class="col-sm-2 control-label">Host列表</label>
             <div class="col-sm-10">
                 <table class="table table-bordered table-hover" id="hosts_table">
                     <tbody>
                         {{ range .Job.Hosts }}
                         <tr>
                             <td>
-                            <input type="text" name='host' value="{{ . }}" required title="Host:Port" placeholder='localhost:8000' class="form-control"/>
+                            <input type="text" name='host' value="{{ . }}" required title="Host:Port" placeholder='www.example.com' class="form-control"/>
                             </td>
                             <td class="text-center">
                                 <a data-op='add_row' class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></a>
@@ -65,15 +65,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Parameters[json]</label>
+            <label class="col-sm-2 control-label">参数列表[json]</label>
             <div class="col-sm-10">
                 <table class="table table-bordered table-hover" id="seeds_table">
                     <thead>
                         <tr>
-                            <th>Header Params</th>
-                            <th>Get Params</th>
-                            <th>Post Params</th>
-                            <th>Response Expectation</th>
+                            <th>Header 参数</th>
+                            <th>Get 参数</th>
+                            <th>Post 参数</th>
+                            <th>期望响应</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -105,8 +105,8 @@
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <a href="/vegeta/"class="btn btn-default">Cancel</a>
-                <button type="submit" class="btn btn-primary">Submit</button>
+                <a href="/vegeta/"class="btn btn-default">取消</a>
+                <button type="submit" class="btn btn-primary">确定</button>
             </div>
           </div>
         </form>
@@ -115,32 +115,32 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-header">
-        <span class="label label-primary">Test Result</label>
+        <span class="label label-primary">测试结果</label>
     </div>
     <div class="panel-body" id="test_result">
     </div>
 </div>
 <div class="panel panel-default">
     <div class="panel-header">
-        <span class="label label-primary">JSON Transform Tool</label>
+        <span class="label label-primary">JSON转换工具</label>
     </div>
     <div class="panel-body">
         <div class="form-horizontal">
           <div class="form-group">
-            <label class="col-sm-2 control-label">Query Parameters</label>
+            <label class="col-sm-2 control-label">查询参数</label>
             <div class="col-sm-10">
                 <input type="text" id="tools-params" value="" class="form-control" required placeholder="key1=value1&key2=value2">
             </div>
           </div>
           <div class="form-group">
-            <label for="json" class="col-sm-2 control-label">json</label>
+            <label for="json" class="col-sm-2 control-label">JSON输出</label>
             <div class="col-sm-10">
                 <input type="text" id="tools-json" value="" class="form-control">
             </div>
           </div>
           <div class="form-group">
             <div class="col-sm-offset-2 col-sm-10">
-                <button type="button" id="btn-tools" class="btn btn-primary">Transform</button>
+                <button type="button" id="btn-tools" class="btn btn-primary">转换</button>
             </div>
           </div>
         </div>

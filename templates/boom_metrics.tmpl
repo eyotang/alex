@@ -1,45 +1,45 @@
 <div class="panel panel-default">
     <div clas="panel-header">
-        <span class="label label-primary">Boom Benchmark Report</label>
+        <span class="label label-primary">性能测试基准报告</label>
     </div>
     <div class="panel-body">
         <table class="table table-striped table-bordered">
             <tbody>
                 <tr>
-                    <td>Job Id</td>
+                    <td>测试计划ID</td>
                     <td><a class="btn btn-link" href="/boom/logs?job_id={{ .log.JobId }}">{{ .log.JobId }}</a></td>
                 </tr>
                 <tr>
-                    <td>Job Name</td>
+                    <td>测试计划</td>
                     <td>{{ .log.JobName }}</td>
                 </tr>
                 <tr>
-                    <td>Url</td>
+                    <td>URL</td>
                     <td>{{ .log.JobUrl }}</td>
                 </tr>
                 {{ if .log.JobDetail }}
                 <tr>
-                    <td>Team</td>
+                    <td>业务线</td>
                     <td>{{ .log.JobDetail.Team }}</td>
                 </tr>
                 <tr>
-                    <td>Project</td>
+                    <td>项目名称</td>
                     <td>{{ .log.JobDetail.Project }}</td>
                 </tr>
                 <tr>
-                    <td>Method</td>
+                    <td>请求类型</td>
                     <td>{{ .log.JobDetail.Method }}</td>
                 </tr>
                 <tr>
-                    <td>DisableKeepAlive</td>
+                    <td>禁用Keep-Alive</td>
                     <td>{{ .log.JobDetail.DisableKeepAlive }}</td>
                 </tr>
                 <tr>
-                    <td>DisableCompression</td>
+                    <td>禁用gzip压缩</td>
                     <td>{{ .log.JobDetail.DisableCompression }}</td>
                 </tr>
                 <tr>
-                    <td>Host:Port List</td>
+                    <td>Host列表</td>
                     <td>
                         <ul class="list-group">
                         {{ range .log.JobDetail.Hosts }} 
@@ -49,7 +49,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <td>Comment</td>
+                    <td>描述</td>
                     <td>{{ .log.Comment }}</td>
                 </tr>
                 {{ end }}
@@ -59,7 +59,7 @@
 </div>
 <div class="panel panel-default">
     <div class="panel-header">
-        <span class="label label-primary">Graphic Report</label>
+        <span class="label label-primary">图形报告</label>
     </div>
     <div class="panel-body">
         <div class="row">
@@ -76,12 +76,12 @@
 new Dygraph(
     document.getElementById("graph_concurrency_latency"),
     "Concurrency,Response Time/s\n" + {{ .log.ConcurrencyLatencyMetrics }},
-    {"title": "Concurrency-Response Time", "xlabel": "Concurrency", "ylabel": "Response Time(ms)"}
+    {"title": "响应时间分布图", "xlabel": "Concurrency", "ylabel": "Response Time(ms)"}
 );
 new Dygraph(
     document.getElementById("graph_status_codes"),
     "Concurrency{{ range $code, $flag := .log.StatusCodesList }},{{ $code }}{{ end }}\n" + {{ .log.StatusCodesMetrics }},
-    {"title": "Concurrency-Status Counters", "xlabel": "Concurrency", "ylabel": "Counter"}
+    {"title": "请求成功与失败分布图", "xlabel": "Concurrency", "ylabel": "Counter"}
 );
 </script>
 <div class="panel panel-default">

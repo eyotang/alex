@@ -1,26 +1,26 @@
 <div class="panel panel-primary">
-    <div class="panel-heading">Vegeta Logs</div>
+    <div class="panel-heading">Vegeta 性能测试报告</div>
     <div class="panel-body">
         <form class="form-inline" method="GET" id="search-form">
           <div class="form-group">
-            <label for="job_id" class="control-label">Job ID</label>
+            <label for="job_id" class="control-label">测试计划ID</label>
             <input type="text" name="job_id" value="{{ .jobId }}" class="form-control" placeholder="Job ID">
           </div>
-          <button type="submit" class="btn btn-primary">Query</button>
-          <a href="" class="btn btn-primary">Refresh Page</a>
+          <button type="submit" class="btn btn-primary">查询</button>
+          <a href="" class="btn btn-primary">刷新</a>
         </form>
         <br/>
         <table class="table table-striped">
             <tr>
-                <th>Job ID</th>
-                <th>Job Name</th>
-                <th>Job Url</th>
-                <th>Host:Port</th>
-                <th>Comment</th>
-                <th>State</th>
-                <th>Start Time</th>
-                <th>End Time</th>
-                <th>Operations</th>
+                <th>测试计划ID</th>
+                <th>测试计划</th>
+                <th>相对URL</th>
+                <th>Host</th>
+                <th>描述</th>
+                <th>状态</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>操作</th>
             </tr>
             {{ range .logs }}
             <tr>
@@ -30,9 +30,9 @@
                 <td>{{if .JobDetail}}{{ range .JobDetail.Hosts }}{{.}}<br/>{{end}}{{end}}</td>
                 <td>{{ .Comment }}</td>
                 {{ if .IsRunning }}
-                <td><span class="label label-success">Running</td>
+                <td><span class="label label-success">正在执行</td>
                 {{ else }}
-                <td><span class="label label-default">Finished</td>
+                <td><span class="label label-default">结束</td>
                 {{ end }}
                 <td>{{ .StartTs|strftime }}</td>
                 <td>{{ .EndTs|strftime}}</td>
