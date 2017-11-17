@@ -101,7 +101,7 @@ func CreateVegetaJob(req *http.Request, r render.Render) {
 		Id:        bson.NewObjectId(),
 		Name:      name,
 		Team:      team,
-		Hosts:     []string{"www.example.com"},
+		Hosts:     []string{"localhost:8000"},
 		Project:   project,
 		Seeds:     []RequestSeed{RequestSeed{}},
 		CreateTs:  time.Now().Unix(),
@@ -498,6 +498,7 @@ func LogAttackVegetaEnd(lg *AttackVegetaLog, metricsList []*vegeta.Metrics) {
 func NewRandomVegetaTargeter(job *VegetaJob) vegeta.Targeter {
 	// Generate http requests for vegeta job's attack
 	var targets []vegeta.Target
+	Host, relativeUrl := UrlSplit(job.Url)
 	for _, host := range job.Hosts {
 		for i := 0; i < len(job.Seeds); i++ {
 			var header = http.Header{}
@@ -511,6 +512,9 @@ func NewRandomVegetaTargeter(job *VegetaJob) vegeta.Targeter {
 					header.Add(k, fmt.Sprintf("%v", v))
 				}
 			}
+			if host := header.Get("Host"); host == "" {
+				header.Add("Host", Host)
+			}
 			if job.Method == "POST" {
 				if contentType := header.Get("Content-Type"); contentType == "" {
 					contentType = "application/x-www-form-urlencoded"
@@ -522,7 +526,7 @@ func NewRandomVegetaTargeter(job *VegetaJob) vegeta.Targeter {
 			var expectation = job.Seeds[i].Expectation
 			var target = vegeta.Target{
 				Method: job.Method,
-				URL:    Urlcat(host, job.Url, param),
+				URL:    Urlcat(host, relativeUrl, param),
 				Body:   BodyBytes(data),
 				Header: header,
 				Expectation: expectation,

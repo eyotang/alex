@@ -76,11 +76,13 @@ func TestParam(req *http.Request, r render.Render) {
 	json.Unmarshal([]byte(params), &paramMap)
 	json.Unmarshal([]byte(data), &dataMap)
 	json.Unmarshal([]byte(expectation), &expectationMap)
-	rq, _ := http.NewRequest(method, Urlcat(host, url, paramMap), bytes.NewReader(BodyBytes(dataMap)))
+	Host, relativeUrl := UrlSplit(url)
+	rq, _ := http.NewRequest(method, Urlcat(host, relativeUrl, paramMap), bytes.NewReader(BodyBytes(dataMap)))
 	for k, vs := range headerMap {
 		rq.Header.Add(k, vs.(string))
 	}
-	if host := req.Header.Get("Host"); host != "" {
+	rq.Host = Host
+	if host := rq.Header.Get("Host"); host != "" {
 		rq.Host = host
 	}
 	if method == "POST" {

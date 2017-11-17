@@ -101,7 +101,7 @@ func CreateBoomJob(req *http.Request, r render.Render) {
 		Id:                 bson.NewObjectId(),
 		Name:               name,
 		Team:               team,
-		Hosts:              []string{"www.example.com"},
+		Hosts:              []string{"localhost:8000"},
 		Project:            project,
 		Seeds:              []RequestSeed{RequestSeed{}},
 		CreateTs:           time.Now().Unix(),
@@ -152,6 +152,7 @@ func EditBoomJob(req *http.Request, r render.Render) {
 	job.Project = req.FormValue("project")
 	job.Method = req.FormValue("method")
 	job.Url = req.FormValue("url")
+	Host, relativeUrl := UrlSplit(job.Url)
 	var hosts []string
 	for _, host := range req.Form["host"] {
 		hosts = append(hosts, host)
@@ -164,6 +165,9 @@ func EditBoomJob(req *http.Request, r render.Render) {
 	for _, header := range req.Form["header"] {
 		var seed map[string]interface{}
 		json.Unmarshal([]byte(header), &seed)
+		if seed["Host"] == "" {
+			seed["Host"] = Host
+		}
 		headerSeeds = append(headerSeeds, seed)
 	}
 	for _, param := range req.Form["param"] {
@@ -190,7 +194,7 @@ func EditBoomJob(req *http.Request, r render.Render) {
 		"team":    job.Team,
 		"project": job.Project,
 		"method":  job.Method,
-		"url":     job.Url,
+		"url":     relativeUrl,
 		"hosts":   job.Hosts,
 		"seeds":   job.Seeds,
 	}

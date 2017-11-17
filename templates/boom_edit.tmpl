@@ -29,7 +29,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="url" class="col-sm-2 control-label">相对URL</label>
+            <label for="url" class="col-sm-2 control-label">URL</label>
             <div class="col-sm-10">
                 <input type="text" title="Url must start with /" name="url" value="{{ .Job.Url }}" class="form-control" required placeholder="/">
             </div>
@@ -45,14 +45,14 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="col-sm-2 control-label">Host列表</label>
+            <label class="col-sm-2 control-label">Host:Port 列表</label>
             <div class="col-sm-10">
                 <table class="table table-bordered table-hover" id="hosts_table">
                     <tbody>
                         {{ range .Job.Hosts }}
                         <tr>
                             <td>
-                            <input type="text" name='host' value="{{ . }}" required title="Host:Port" placeholder='www.example.com' class="form-control"/>
+                            <input type="text" name='host' value="{{ . }}" required title="Host:Port" placeholder='localhost:8000' class="form-control"/>
                             </td>
                             <td class="text-center">
                                 <a data-op='add_row' class="btn btn-default"><span class="glyphicon glyphicon-plus"></span></a>
@@ -242,12 +242,7 @@ $(document).ready(function() {
         if(ok) {
             el.parent().removeClass("has-error")
         } else {
-            ok = /^\w+(\.\w+){0,3}$/.test(params)
-            if(ok) {
-                el.parent().removeClass("has-error")
-            } else {
-                el.parent().addClass("has-error")
-            }
+            el.parent().addClass("has-error")
         }
         return ok;
     }
@@ -303,7 +298,7 @@ $(document).ready(function() {
             team_el.parent().removeClass("has-error")
         }
         var url_el = $('input[name=url]');
-        if(url_el.val() == "" || url_el.val().charAt(0) != '/') {
+        if(url_el.val() == "") {
             url_el.parent().addClass("has-error")
             return false;
         } else {

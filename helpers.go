@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"strings"
 	"github.com/martini-contrib/render"
 	"html/template"
 	"net/url"
@@ -55,6 +56,11 @@ func Urlcat(host string, urls string, params map[string]interface{}) string {
 	}
 	u.RawQuery = values.Encode()
 	return u.String()
+}
+
+func UrlSplit(urls string) (string, string) {
+	var index = strings.Index(urls, "/")
+	return urls[:index], urls[index:]
 }
 
 func GenMethodSelectors(method string) []MethodSelector {
