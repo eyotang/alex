@@ -152,7 +152,6 @@ func EditBoomJob(req *http.Request, r render.Render) {
 	job.Project = req.FormValue("project")
 	job.Method = req.FormValue("method")
 	job.Url = req.FormValue("url")
-	Host, relativeUrl := UrlSplit(job.Url)
 	var hosts []string
 	for _, host := range req.Form["host"] {
 		hosts = append(hosts, host)
@@ -165,9 +164,6 @@ func EditBoomJob(req *http.Request, r render.Render) {
 	for _, header := range req.Form["header"] {
 		var seed map[string]interface{}
 		json.Unmarshal([]byte(header), &seed)
-		if seed["Host"] == "" {
-			seed["Host"] = Host
-		}
 		headerSeeds = append(headerSeeds, seed)
 	}
 	for _, param := range req.Form["param"] {
@@ -194,7 +190,7 @@ func EditBoomJob(req *http.Request, r render.Render) {
 		"team":    job.Team,
 		"project": job.Project,
 		"method":  job.Method,
-		"url":     relativeUrl,
+		"url":     job.Url,
 		"hosts":   job.Hosts,
 		"seeds":   job.Seeds,
 	}
@@ -472,6 +468,7 @@ func NewRandomBoomShooter(job *BoomJob) *RandomShooter {
 	var urls []string
 	var bodies [][]byte
 	var l = 0
+	Host, relativeUrl := UrlSplit(job.Url)
 	for _, host := range job.Hosts {
 		for i := 0; i < len(job.Seeds); i++ {
 			var header = http.Header{}
@@ -485,10 +482,19 @@ func NewRandomBoomShooter(job *BoomJob) *RandomShooter {
 					header.Add(k, fmt.Sprintf("%v", v))
 				}
 			}
+			if host := header.Get("Host"); host == "" {
+				header.Add("Host", Host)
+			}
+			if job.Method == "POST" {
+				if contentType := header.Get("Content-Type"); contentType == "" {
+					contentType = "application/x-www-form-urlencoded"
+					header.Add("Content-Type", contentType)
+				}
+			}
 			var param = job.Seeds[i].Param
 			var data = job.Seeds[i].Data
 			headers = append(headers, header)
-			urls = append(urls, Urlcat(host, job.Url, param))
+			urls = append(urls, Urlcat(host, relativeUrl, param))
 			bodies = append(bodies, BodyBytes(data))
 			l++
 		}
