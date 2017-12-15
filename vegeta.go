@@ -344,6 +344,7 @@ type AttackVegetaLog struct {
 	Comment     string
 	State       string
 	MetricsList []*vegeta.Metrics
+	PerfMetricsList []*PerfMetrics
 	StartTs     int64
 	EndTs       int64
 }
@@ -420,6 +421,56 @@ func (log *AttackVegetaLog) StatusCodesMetrics() string {
 			buffer.WriteString(fmt.Sprintf(",%v", count))
 		}
 		buffer.WriteString("\n")
+	}
+	return buffer.String()
+}
+
+func (log *AttackVegetaLog) CpuUsageMetrics() string {
+	var buffer bytes.Buffer
+	var startTime = 0.0
+	for _, metrics := range log.PerfMetricsList {
+		var user = metrics.CpuUsage.User
+		var system = metrics.CpuUsage.System
+		buffer.WriteString(fmt.Sprintf("%v,%v,%v\n", startTime, user, system))
+		startTime += PERF_INTERVAL
+	}
+	return buffer.String()
+}
+
+func (log *AttackVegetaLog) MemUsageMetrics() string {
+	var buffer bytes.Buffer
+	var startTime = 0.0
+	for _, metrics := range log.PerfMetricsList {
+		var mem = metrics.MemUsage.Mem
+		var memSwap = metrics.MemUsage.MemSwap
+		buffer.WriteString(fmt.Sprintf("%v,%v,%v\n", startTime, mem, memSwap))
+		startTime += PERF_INTERVAL
+	}
+	return buffer.String()
+}
+
+func (log *AttackVegetaLog) DiskUsageMetrics() string {
+	var buffer bytes.Buffer
+	var startTime = 0.0
+	for _, metrics := range log.PerfMetricsList {
+		var rrqm = metrics.DiskUsage.Rrqm
+		var wrqm = metrics.DiskUsage.Wrqm
+		buffer.WriteString(fmt.Sprintf("%v,%v,%v\n", startTime, rrqm, wrqm))
+		startTime += PERF_INTERVAL
+	}
+	return buffer.String()
+}
+
+func (log *AttackVegetaLog) NetworkMetrics() string {
+	var buffer bytes.Buffer
+	var startTime = 0.0
+	for _, metrics := range log.PerfMetricsList {
+		var rxpck = metrics.Network.Rxpck
+		var txpck = metrics.Network.Txpck
+		var rxkb  = metrics.Network.Rxkb
+		var txkb  = metrics.Network.Txkb
+		buffer.WriteString(fmt.Sprintf("%v,%v,%v,%v,%v\n", startTime, rxpck, txpck, rxkb, txkb))
+		startTime += PERF_INTERVAL
 	}
 	return buffer.String()
 }

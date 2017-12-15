@@ -71,6 +71,24 @@
                 <div id="graph_status_codes"></div>
             </div>
         </div>
+        <br/>
+        <div class="row">
+          <div class="col-md-6">
+                <div id="graph_cpu_usage"></div>
+            </div>
+            <div class="col-md-6">
+                <div id="graph_mem_usage"></div>
+            </div>
+        </div>
+        <br/>
+        <div class="row">
+          <div class="col-md-6">
+                <div id="graph_disk_usage"></div>
+            </div>
+            <div class="col-md-6">
+                <div id="graph_network"></div>
+            </div>
+        </div>
     </div>
 </div>
 <script type="text/javascript">
@@ -93,6 +111,26 @@ new Dygraph(
     document.getElementById("graph_status_codes"),
     "Time{{ range $code, $flag := .log.StatusCodesList }},{{ $code }}{{ end }}\n" + {{ .log.StatusCodesMetrics }},
     {"title": "请求成功与失败分布图", "xlabel": "Elapsed time(s)", "ylabel": "Counter"}
+);
+new Dygraph(
+    document.getElementById("graph_cpu_usage"),
+    "Time,%user,%system\n" + {{ .log.CpuUsageMetrics }},
+    {"title": "CPU使用状态", "xlabel": "Elapsed time(s)", "ylabel": "CPU使用率(%)"}
+);
+new Dygraph(
+    document.getElementById("graph_mem_usage"),
+    "Time,%mem,%mem+swap\n" + {{ .log.MemUsageMetrics }},
+    {"title": "内存使用状态", "xlabel": "Elapsed time(s)", "ylabel": "内存使用率(%)"}
+);
+new Dygraph(
+    document.getElementById("graph_disk_usage"),
+    "Time,rrqm/s,wrqn/s\n" + {{ .log.DiskUsageMetrics }},
+    {"title": "磁盘使用情况", "xlabel": "Elapsed time(s)", "ylabel": "磁盘IO(/s)"}
+);
+new Dygraph(
+    document.getElementById("graph_network"),
+    "Time,rxpck/s,txpck/s,rxkB/s,txkB/s\n" + {{ .log.NetworkMetrics }},
+    {"title": "网络使用情况", "xlabel": "Elapsed time(s)", "ylabel": "网络IO(/s)"}
 );
 </script>
 <div class="panel panel-default">

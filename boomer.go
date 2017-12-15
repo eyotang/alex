@@ -18,6 +18,7 @@ type result struct {
 	err        error
 	statusCode int
 	duration   time.Duration
+	endtime    time.Time
 }
 
 type IShooter interface {
@@ -62,7 +63,7 @@ func (b *Boomer) Run() *Report {
 	b.results = make([][]*result, b.Concurrency)
 	s := time.Now()
 	b.runWorkers()
-	var report = newReport(b.results, b.Concurrency, time.Now().Sub(s))
+	var report = newReport(b.results, b.Concurrency, s)
 	report.finalize()
 	return report
 }
@@ -76,9 +77,11 @@ func (b *Boomer) makeRequest(c *http.Client, i int) {
 		io.Copy(ioutil.Discard, resp.Body)
 		resp.Body.Close()
 	}
+	e := time.Now()
 	var res = result{
 		statusCode: code,
-		duration:   time.Now().Sub(s),
+		duration:   e.Sub(s),
+		endtime:    e,
 		err:        err,
 	}
 	b.results[i] = append(b.results[i], &res)
@@ -126,19 +129,23 @@ type Report struct {
 	Requests       int            // total requests sent
 	SuccessRatio   float64        // success ratio
 	Duration       time.Duration  // time for attacking
+	ResponseDist   map[int]int    // response in seconds
 	ErrorDist      map[string]int // error map
 	StatusCodeDist map[string]int // status codes map
 
 	avgTotal  float64
 	results   [][]*result
 	latencies *quantile.Estimator
+	startTime time.Time // 测试开始时间
 }
 
-func newReport(results [][]*result, concurrency int, duration time.Duration) *Report {
+func newReport(results [][]*result, concurrency int, startTime time.Time) *Report {
+	duration := time.Since(startTime)
 	return &Report{
 		results:        results,
 		Concurrency:    concurrency,
 		Duration:       duration,
+		ResponseDist:   make(map[int]int),
 		StatusCodeDist: make(map[string]int),
 		ErrorDist:      make(map[string]int),
 		latencies: quantile.New(
@@ -146,6 +153,7 @@ func newReport(results [][]*result, concurrency int, duration time.Duration) *Re
 			quantile.Known(0.95, 0.001),
 			quantile.Known(0.99, 0.0005),
 		),
+		startTime:      startTime,
 	}
 }
 
@@ -161,6 +169,7 @@ func (r *Report) finalize() {
 				r.latencies.Add(res.duration.Seconds())
 				r.avgTotal += res.duration.Seconds()
 				r.StatusCodeDist[fmt.Sprintf("%v", res.statusCode)]++
+				r.ResponseDist[int(res.endtime.Sub(r.startTime).Seconds())]++
 				success++
 			}
 			total++

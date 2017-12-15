@@ -10,6 +10,8 @@ import (
 	"net/url"
 	"sync"
 	"time"
+	"io/ioutil"
+	"os/exec"
 )
 
 var Pipelines = template.FuncMap{
@@ -152,4 +154,25 @@ func (this *ConcurrentSet) Delete(key string) {
 	this.mutex.Lock()
 	defer this.mutex.Unlock()
 	delete(this.d, key)
+}
+
+
+func execCommand(commandName string, params []string) (error, string) {
+    cmd := exec.Command(commandName, params...)
+
+    stdout, err := cmd.StdoutPipe()
+    if err != nil {
+        return err, ""
+    }
+    if err := cmd.Start(); err != nil {
+        return err, ""
+    }
+    bytes, err := ioutil.ReadAll(stdout)
+    if err != nil {
+        return err, ""
+    }
+    if err := cmd.Wait(); err != nil {
+        return err, ""
+    }
+    return nil, string(bytes)
 }
