@@ -1,6 +1,6 @@
 package main
 
-const PERF_INTERVAL = 1
+const PERF_INTERVAL = 5
 type (
     PerfMetrics struct {
         CpuUsage CpuUsageMetrics `json:"cpuusage"`
