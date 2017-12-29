@@ -1,0 +1,40 @@
+<div class="panel panel-primary">
+    <div class="panel-heading">Jmeter测试报告</div>
+    <div class="panel-body">
+        <form class="form-inline" method="GET" id="search-form">
+          <div class="form-group">
+            <label for="job_name" class="control-label">测试计划</label>
+            <input type="text" name="job_name" value="{{ .jobName }}" class="form-control" placeholder="Job Name">
+          </div>
+          <button type="submit" class="btn btn-primary">查询</button>
+          <a href="" class="btn btn-primary">刷新</a>
+        </form>
+        <br/>
+        <table class="table table-striped">
+            <tr>
+                <th>测试计划</th>
+                <th>状态</th>
+                <th>开始时间</th>
+                <th>结束时间</th>
+                <th>操作</th>
+            </tr>
+            {{ range .logs }}
+            <tr>
+                <td><a class="btn btn-link" href="/jmeter/">{{ .JobName }}</a></td>
+                {{ if .IsRunning }}
+                <td><span class="label label-success">正在执行</td>
+                {{ else }}
+                <td><span class="label label-default">结束</td>
+                {{ end }}
+                <td>{{ .StartTs|strftime }}</td>
+                <td>{{ .EndTs|strftime}}</td>
+                <td>
+                    <a class="btn btn-link" href="/jmeter/metrics?log_id={{ .Id.Hex }}"><span class="glyphicon glyphicon-stats"></span></a>
+                    <a class="btn btn-link" href="/jmeter/log/delete?log_id={{ .Id.Hex }}"><span class="glyphicon glyphicon-remove"></span></a>
+                </td>
+            </tr>
+            {{ end }}
+        </table>
+        {{ template "pager" .pager }}
+    </div>
+</div>
