@@ -65,7 +65,15 @@
 <div class="panel panel-default">
     <div class="panel-header">
         <span class="label label-primary">图形报告</label>
+</div>
+    <div class="panel-body">
+        <div class="row">
+            <div class="col-md-12">
+                <div id="graph_latency_rate" style="width:100%;height:500px"></div>
+            </div>
+        </div>
     </div>
+    </br>
     <div class="panel-body">
         <div class="row">
             <div class="col-md-12">
@@ -74,6 +82,71 @@
         </div>
     </div>
 </div>
+<script type="text/javascript">
+  var graph_latency_rate = echarts.init(document.getElementById("graph_latency_rate"))
+  var LatencyMetrics = {{ .log.LatencyMetrics }}
+  var xElapsed = LatencyMetrics.elapsed;
+  var dataList = LatencyMetrics.data_list;
+  var dSeries = LatencyMetrics.series;
+  for (var i = 0; i < dataList.length; i++) {
+      var j = 0;
+      for (j = 0; j < dataList[i].length; j++) {
+          if (dataList[i][j] == -1) {
+              dataList[i][j] = '-'
+          }
+      }
+   }
+
+   var series = [];
+   for (var i = 0; i < dataList.length; i++) {
+       series.push({
+           connectNulls: true,
+  name: dSeries[i],
+  type:'line',
+  data: dataList[i]
+  });
+   }
+
+  var option = {
+  title: {
+  text: '响应时间分布图',
+  subtext: {{ .log.JobName }}
+  },
+  tooltip: {
+  trigger: 'axis'
+  },
+  legend: {
+                       data: dSeries,
+                       left: '10%'
+  },
+  toolbox: {
+  show: true,
+  feature: {
+  dataZoom: {
+  yAxisIndex: 'none'
+  },
+  dataView: {readOnly: false},
+  magicType: {type: ['line', 'bar']},
+  restore: {},
+  saveAsImage: {}
+  }
+  },
+  xAxis:  {
+  type: 'category',
+  boundaryGap: false,
+  data: xElapsed
+  },
+  yAxis: {
+  type: 'value',
+  axisLabel: {
+  formatter: '{value}'
+  }
+  },
+  series: series
+  };
+  graph_latency_rate.setOption(option)
+
+</script>
 <script type="text/javascript">
   var graph_tps = echarts.init(document.getElementById("graph_tps"))
   var TpsMetrics = {{ .log.TransactionMetrics }}

@@ -5,6 +5,7 @@ import (
     "github.com/martini-contrib/render"
     "gopkg.in/mgo.v2/bson"
     "log"
+    "time"
     "net/http"
     "strconv"
 )
@@ -30,7 +31,7 @@ type (
 
     Elapsed struct {
         TotalElapsed int64
-        Num          int32
+        Num          int64
     }
 
     TimeMetrics struct {
@@ -64,13 +65,68 @@ func (log *AttackJmeterLog) IsRunning() bool {
     return log.State == "Running"
 }
 
+func (log *AttackJmeterLog) LatencyMetrics() map[string]interface{} {
+    var i int64
+    var endTime = log.EndTs - log.StartTs
+    var timeList []string
+    var elapsedTime []string
+    for i = 0; i < endTime; i++ {
+        d := time.Unix(i, 0).UTC().Format("15:04:05.000")
+        elapsedTime = append(elapsedTime, d)
+        d = time.Unix(i, 500*1000000).UTC().Format("15:04:05.000")
+        elapsedTime = append(elapsedTime, d)
+        timeList = append(timeList, strconv.FormatInt(log.StartTs+i, 10))
+    }
+
+    var series []string
+    var dataList [][]int32
+    for _, metrics := range log.MetricsList {
+        timeMetrics := metrics.TimeMetrics
+        if timeMetrics == nil {
+            continue
+        }
+        series = append(series, metrics.Label)
+        var data []int32
+        for _, ts := range timeList {
+            if timeMetrics[ts] != nil {
+                b500 := timeMetrics[ts].Elapsed[0]
+                a500 := timeMetrics[ts].Elapsed[1]
+                if b500 != nil && b500.Num != 0 {
+                    data = append(data, int32(b500.TotalElapsed/b500.Num))
+                } else {
+                    data = append(data, -1)
+                }
+                if a500 != nil && a500.Num != 0 {
+                    data = append(data, int32(a500.TotalElapsed/a500.Num))
+                } else {
+                    data = append(data, -1)
+                }
+
+            } else {
+                data = append(data, -1)
+                data = append(data, -1)
+            }
+        }
+        dataList = append(dataList, data)
+    }
+
+    result := map[string]interface{} {
+        "elapsed": elapsedTime,
+        "series" : series,
+        "data_list": dataList,
+    }
+
+    return result
+}
+
 func (log *AttackJmeterLog) TransactionMetrics() map[string]interface{} {
     var i int64
     var endTime = log.EndTs - log.StartTs
     var timeList []string
-    var elapsedTime []int64
+    var elapsedTime []string
     for i = 0; i < endTime; i++ {
-        elapsedTime = append(elapsedTime, i)
+        d := time.Unix(i, 0).UTC().Format("15:04:05")
+        elapsedTime = append(elapsedTime, d)
         timeList = append(timeList, strconv.FormatInt(log.StartTs+i, 10))
     }
 
