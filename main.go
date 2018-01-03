@@ -59,7 +59,7 @@ func main() {
 	m.Group("/jmeter", func(r martini.Router) {
 		r.Get("/logs", GetJmeterLogs)
 		r.Get("/log/delete", DeleteJmeterLog)
-		//r.Get("/metrics", GetJmeterMetrics)
+		r.Get("/metrics", GetJmeterMetrics)
 	})
 	// Let's fly
 	m.RunOnAddr(G_AlexAddr)
