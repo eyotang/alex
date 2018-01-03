@@ -78,12 +78,11 @@
   var graph_tps = echarts.init(document.getElementById("graph_tps"))
   var TpsMetrics = {{ .log.TransactionMetrics }}
   var xElapsed = TpsMetrics.elapsed;
-  var dSeries  = TpsMetrics.series;
   var dataList = TpsMetrics.data_list;
-  var dySeries = []
-  for (var i = 0; i < dSeries.length; i++) {
-      dySeries.push(dSeries[i]+" (success)")
-      dySeries.push(dSeries[i]+" (failure)")
+  var dSeries = []
+  for (var i = 0; i < TpsMetrics.series.length; i++) {
+      dSeries.push(TpsMetrics.series[i]+" (success)")
+      dSeries.push(TpsMetrics.series[i]+" (failure)")
   }
   for (var i = 0; i < dataList.length; i++) {
       var j = 0;
@@ -103,52 +102,16 @@
    for (var i = 0; i < dataList.length; i++) {
        series.push({
            connectNulls: true,
-  name: dSeries[i]+" (success)",
+  name: dSeries[2*i],
   type:'line',
-  data: dataList[i].success,
-  markPoint: {
-  data: [
-  {type: 'max', name: '最大值'},
-  {type: 'min', name: '最小值'}
-  ]
-  },
-  markLine: {
-  data: [
-  {type: 'average', name: '平均值'}
-  ]
-  }
+  data: dataList[i].success
   });
 
   series.push({
       connectNulls: true,
-      name: dSeries[i] + " (failure)",
+      name: dSeries[2*i+1],
   type:'line',
-  data: dataList[i].failure,
-  markPoint: {
-  data: [
-  {name: '周最低', value: -2, xAxis: 1, yAxis: -1.5}
-  ]
-  },
-  markLine: {
-  data: [
-  {type: 'average', name: '平均值'},
-  [{
-  symbol: 'none',
-  x: '90%',
-  yAxis: 'max'
-  }, {
-  symbol: 'circle',
-  label: {
-  normal: {
-  position: 'start',
-  formatter: '最大值'
-  }
-  },
-  type: 'max',
-  name: '最高点'
-  }]
-  ]
-  }
+  data: dataList[i].failure
   });
    }
 
@@ -161,7 +124,7 @@
   trigger: 'axis'
   },
   legend: {
-                       data: dySeries,
+                       data: dSeries,
                        left: '10%'
   },
   toolbox: {
