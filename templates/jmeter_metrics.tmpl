@@ -132,11 +132,17 @@
   }
   },
   xAxis:  {
+      name: '时间 (500 ms)',
+      nameLocation: 'center',
+      nameGap: 30,
   type: 'category',
   boundaryGap: false,
   data: xElapsed
   },
   yAxis: {
+      name: '响应时间 (ms)',
+      nameLocation: 'middle',
+      nameGap: 40,
   type: 'value',
   axisLabel: {
   formatter: '{value}'
@@ -197,8 +203,8 @@
   trigger: 'axis'
   },
   legend: {
-                       data: dSeries,
-                       left: '10%'
+      data: dSeries,
+      left: '10%'
   },
   toolbox: {
   show: true,
@@ -213,11 +219,17 @@
   }
   },
   xAxis:  {
+      name: '时间 (1 s)',
+      nameLocation: 'center',
+      nameGap: 30,
   type: 'category',
   boundaryGap: false,
   data: xElapsed
   },
   yAxis: {
+      name: 'TPS 数量',
+      nameLocation: 'middle',
+      nameGap: 40,
   type: 'value',
   axisLabel: {
   formatter: '{value}'
